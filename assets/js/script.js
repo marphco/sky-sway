@@ -232,11 +232,10 @@ cityInput.addEventListener("keydown", function (event) {
   }
 });
 
-// Replace this line in your existing code
 searchBtn.addEventListener("click", search);
 
-// Add a new function to perform the search
-function search() {
+// Add this code to clear the form input
+async function search() {
   // Display the current date and fetch weather data based on the city input
   displayTime(todayDateElement);
   const cityInputValue = document.getElementById("cityInput").value;
@@ -249,30 +248,47 @@ function search() {
     return; // Stop execution if the city input is empty
   }
 
-  // Show the forecast section
-  const forecastSection = document.getElementById("five-days-forecast");
-  forecastSection.classList.remove("hidden");
+  // Fetch weather data
+  const weatherData = await getWeatherData(cityInputValue);
 
-  // Create forecastDisplay element if not present
-  let forecastDisplayElement = document.getElementById("forecastDisplay");
-  if (!forecastDisplayElement) {
-    forecastDisplayElement = document.createElement("div");
-    forecastDisplayElement.id = "forecastDisplay";
-    document.body.appendChild(forecastDisplayElement);
+  // Check if weather data was fetched successfully
+  if (weatherData) {
+    // Show the forecast section
+    const forecastSection = document.getElementById("five-days-forecast");
+    forecastSection.classList.remove("hidden");
+
+    // Create forecastDisplay element if not present
+    let forecastDisplayElement = document.getElementById("forecastDisplay");
+    if (!forecastDisplayElement) {
+      forecastDisplayElement = document.createElement("div");
+      forecastDisplayElement.id = "forecastDisplay";
+      document.body.appendChild(forecastDisplayElement);
+    }
+
+    // Fetch forecast data
+    await getForecastData(cityInputValue);
+
+    // Clear the form input
+    clearForm();
+  }
+}
+
+// Function to get weather data from OpenWeatherMap API
+async function getWeatherData(city) {
+  if (!(await preCheckData(city))) {
+    return null; // Return null if data cannot be fetched
   }
 
-  // Create searchHistory element if not present
-  let searchHistoryElement = document.getElementById("searchHistory");
-  if (!searchHistoryElement) {
-    searchHistoryElement = document.createElement("div");
-    searchHistoryElement.id = "searchHistory";
-    document.body.appendChild(searchHistoryElement);
+  const weatherAPIUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+  try {
+    const response = await fetch(weatherAPIUrl);
+    const data = await response.json();
+    displayWeather(data);
+    updateSearchHistory(city); // Update search history after a successful search
+    return data; // Return the weather data
+  } catch (error) {
+    console.error(`Error fetching weather data: ${error.message}`);
+    return null; // Return null if an error occurs
   }
-
-  // Fetch weather and forecast data
-  getWeatherData(cityInputValue);
-  getForecastData(cityInputValue);
-
-  // Clear the form input
-  clearForm();
 }
