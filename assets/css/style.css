@@ -50,3 +50,11 @@ ul {
     display: flex;
     justify-content: space-around;
 }
+
+#search-history .btn .text-center {
+    text-align: center;
+}
+
+#search-history p {
+    margin:0;
+}

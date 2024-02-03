@@ -47,15 +47,48 @@ function updateSearchHistory(city) {
       getForecastData(city);
     });
 
+    // Add the specified classes to the new search entry
+    newSearchEntry.classList.add("btn", "btn-primary", "m-2", "d-flex", "flex-wrap", "justify-content-around", "text-center");
+
     // Append the new search entry to the search history
     searchHistoryElement.appendChild(newSearchEntry);
   }
 }
 
+// Function to check if data can be fetched
+async function preCheckData(city) {
+  if (!city) {
+    document.getElementById("error-message").textContent = "Please enter a city to search.";
+    document.getElementById("error-message").style.display = "block";
+    return false;
+  }
+
+  const weatherAPIUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+  try {
+    const response = await fetch(weatherAPIUrl);
+
+    if (response.status !== 404) {
+      // Hide the error message
+      document.getElementById("error-message").style.display = "none";
+      return true; // Data can be fetched
+    } else {
+      // Display "City not found" message and return false
+      document.getElementById("error-message").textContent = "City not found.";
+      document.getElementById("error-message").style.display = "block";
+      return false;
+    }
+  } catch (error) {
+    console.error(`Error checking data: ${error.message}`);
+    document.getElementById("error-message").textContent = `Error checking data: ${error.message}`;
+    document.getElementById("error-message").style.display = "block";
+    return false;
+  }
+}
+
 // Function to get weather data from OpenWeatherMap API
 async function getWeatherData(city) {
-  if (!city) {
-    alert("Please enter a city to search.");
+  if (!(await preCheckData(city))) {
     return;
   }
 
@@ -73,8 +106,7 @@ async function getWeatherData(city) {
 
 // Function to get 5-day forecast data from OpenWeatherMap API
 async function getForecastData(city) {
-  if (!city) {
-    alert("Please enter a city to search.");
+  if (!(await preCheckData(city))) {
     return;
   }
 
@@ -115,7 +147,6 @@ function displayWeather(data) {
         </div>
       </div>
     </div>
-
   `;
 }
 
@@ -168,19 +199,42 @@ function clearForm() {
   document.getElementById("cityInput").value = "";
 }
 
-searchBtn.addEventListener("click", function () {
+
+
+
+
+// Add this code after selecting the input field
+const cityInput = document.getElementById("cityInput");
+
+cityInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Trigger the search when Enter key is pressed
+    search();
+  }
+});
+
+
+// Replace this line in your existing code
+searchBtn.addEventListener("click", search);
+
+// Add a new function to perform the search
+function search() {
   // Display the current date and fetch weather data based on the city input
   displayTime(todayDateElement);
-  const cityInput = document.getElementById("cityInput").value;
+  const cityInputValue = document.getElementById("cityInput").value;
 
   // Check if the city input is empty
-  if (!cityInput) {
-    alert("Please enter a city to search.");
+  if (!cityInputValue) {
+    document.getElementById("error-message").textContent = "Please enter a city to search.";
+    document.getElementById("error-message").style.display = "block";
     return; // Stop execution if the city input is empty
   }
 
   // Show the forecast section
-  const forecastSection = document.getElementById("five-days-forcast");
+  const forecastSection = document.getElementById("five-days-forecast");
   forecastSection.classList.remove("hidden");
 
   // Create forecastDisplay element if not present
@@ -200,9 +254,9 @@ searchBtn.addEventListener("click", function () {
   }
 
   // Fetch weather and forecast data
-  getWeatherData(cityInput);
-  getForecastData(cityInput);
+  getWeatherData(cityInputValue);
+  getForecastData(cityInputValue);
 
   // Clear the form input
   clearForm();
-});
+};
