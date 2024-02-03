@@ -48,7 +48,15 @@ function updateSearchHistory(city) {
     });
 
     // Add the specified classes to the new search entry
-    newSearchEntry.classList.add("btn", "btn-primary", "m-2", "d-flex", "flex-wrap", "justify-content-around", "text-center");
+    newSearchEntry.classList.add(
+      "btn",
+      "btn-primary",
+      "m-2",
+      "d-flex",
+      "flex-wrap",
+      "justify-content-around",
+      "text-center"
+    );
 
     // Append the new search entry to the search history
     searchHistoryElement.appendChild(newSearchEntry);
@@ -58,7 +66,8 @@ function updateSearchHistory(city) {
 // Function to check if data can be fetched
 async function preCheckData(city) {
   if (!city) {
-    document.getElementById("error-message").textContent = "Please enter a city to search.";
+    document.getElementById("error-message").textContent =
+      "Please enter a city to search.";
     document.getElementById("error-message").style.display = "block";
     return false;
   }
@@ -80,7 +89,9 @@ async function preCheckData(city) {
     }
   } catch (error) {
     console.error(`Error checking data: ${error.message}`);
-    document.getElementById("error-message").textContent = `Error checking data: ${error.message}`;
+    document.getElementById(
+      "error-message"
+    ).textContent = `Error checking data: ${error.message}`;
     document.getElementById("error-message").style.display = "block";
     return false;
   }
@@ -135,14 +146,23 @@ function displayWeather(data) {
       <div class="row g-0">        
         <div class="col-12">
           <div class="card-body">
-            <h2 class="card-title">${
-              data.name
-            }<img src="${iconUrl}" class="d-inline img-fluid"><br><span id="today-date">${getCurrentDate()}</span></h2>
+
+          <div class="d-flex justify-content-between">
+          <div class="d-flex flex-start">
+          <h2 class="card-title">${
+            data.name
+          }<img src="${iconUrl}" class="d-inline img-fluid"><br><span id="today-date">${getCurrentDate()}</span></h2>
+          </div>
+          <div class="d-flex flex-end">
+            <h2 id="temp">${temperatureInFahrenheit}°F</h2>
+            </div>
+            </div>
+            <div class="d-block">
             <ul>
-              <li>Temperature: ${temperatureInFahrenheit}°F</li>
               <li>Wind Speed: ${data.wind.speed} m/s</li>
               <li>Umidity: ${data.main.humidity}%</li>
             </ul>
+            
           </div>
         </div>
       </div>
@@ -199,10 +219,6 @@ function clearForm() {
   document.getElementById("cityInput").value = "";
 }
 
-
-
-
-
 // Add this code after selecting the input field
 const cityInput = document.getElementById("cityInput");
 
@@ -216,7 +232,6 @@ cityInput.addEventListener("keydown", function (event) {
   }
 });
 
-
 // Replace this line in your existing code
 searchBtn.addEventListener("click", search);
 
@@ -228,7 +243,8 @@ function search() {
 
   // Check if the city input is empty
   if (!cityInputValue) {
-    document.getElementById("error-message").textContent = "Please enter a city to search.";
+    document.getElementById("error-message").textContent =
+      "Please enter a city to search.";
     document.getElementById("error-message").style.display = "block";
     return; // Stop execution if the city input is empty
   }
@@ -259,4 +275,4 @@ function search() {
 
   // Clear the form input
   clearForm();
-};
+}

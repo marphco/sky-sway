@@ -1,60 +1,91 @@
 #today-date {
-    display: block;
-    font-size: 18px;
-    color: grey;
+  display: block;
+  font-size: 18px;
+  color: grey;
 }
 
 aside {
-    background-color:lightsteelblue;
+  background-color: lightsteelblue;
 }
 
 ul {
-    list-style-type: none;
-    padding: 50px 0 0 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 50px;
+  list-style-type: none;
+  padding: 50px 0 0 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
 }
 
 .small-card {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0;
-    gap:0
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  gap: 0;
 }
 
 #weather-display .card {
-   background-color: azure;
+  background-color: azure;
 }
 
 #weather-display img {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 #five-days-forcast h2 {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 #forecast-display .card {
-    display: flex;
-    width: 18%;
-    background-color:azure;
+  display: flex;
+  width: 18%;
+  background-color: azure;
 }
 
 #logo {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 #search-history .btn .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 #search-history p {
-    margin:0;
+  margin: 0;
+}
+
+#temp {
+  font-size: 60px;
+}
+
+#content,
+#weather-display {
+  max-width: 100vw;
+}
+
+.card {
+  max-width: 95vw;
+}
+
+@media only screen and (max-width: 768px) {
+  #forecast-display {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100vw;
+  }
+
+  #forecast-display .card {
+    width: 100%;
+  }
+
+  .small-card {
+    flex-direction: row;
+    gap: 20px;
+  }
 }
